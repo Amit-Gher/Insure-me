@@ -23,6 +23,12 @@ pipeline {
             steps {
                 sh 'docker build -t amitg01/insure-me .'
             }    
-        }        
+        }  
+        stage('Docker Image Push') {
+            steps {
+                sh 'docker login -u amitg01 -p ${DockerHubPwd}'
+                sh 'docker push amitg01/insure-me'
+            }    
+        }     
     }
 }
