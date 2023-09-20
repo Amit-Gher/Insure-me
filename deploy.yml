@@ -1,18 +1,23 @@
 ---
 - hosts: all
- become: true
- tasks:
-   - name: Install docker 
-    apt: name=docker.io state=present
-   - name: Start docker Service
-    command: sudo systemctl start docker 
-    become: true
-    become_user: root
-   - name: docker run user
-    shell: usermod -a -G docker ubuntu
-   - name: check the docker version 
-    command: "docker version"
-    register: docversion
-   - name: Deploy app and run as container
-    command: docker run -itd -p 8084:8081 amitg01/insure-me:latest
-    
+  become: true
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker Service
+      command: sudo systemctl start docker
+      become: true
+      become_user: root
+
+    - name: Add user to Docker group
+      shell: usermod -a -G docker ubuntu
+
+    - name: Check Docker Version
+      command: "docker version"
+      register: docversion
+
+    - name: Deploy App and Run as Container
+      command: docker run -itd -p 8084:8081 amitg01/insure-me:latest
