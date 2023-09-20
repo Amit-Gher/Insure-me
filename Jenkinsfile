@@ -31,8 +31,13 @@ pipeline {
                     sh 'docker login -u amitg01 -p ${dockerhubpwd}'
                     }    
                     sh 'docker push amitg01/insure-me'  
-        }     
-    }
+           }     
+        }
+         stage('Deploy Container') {
+            steps {
+                ansiblePlaybook credentialsId: 'SSH-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'prod.inv', playbook: 'deploy.yml'
+            }    
+        }  
 }
 }
     
