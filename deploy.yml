@@ -1,25 +1,20 @@
----
-- hosts: all
+- name : Configure Docker on EC2 Instances
+  hosts : all
   become: true
-  tasks:
-    - name: Install Docker
-      apt:
-        name: docker.io
-        state: present
+  connection : ssh
+  tasks : 
+  - name: updating apt
+    command : sudo apt-get update
 
-    - name: Start Docker Service
-      command: sudo systemctl start docker
-      become: true
-      become_user: root
+  - name : Install Docker
+    command : sudo apt-get install -y docker.io
+    become : yes
+    become_user : root
 
-    - name: Add user to Docker group
-      shell: usermod -a -G docker ubuntu
+  - name : Start Docker Service
+    command : sudo systemctl start docker
+    become : yes
+    become_user : root
 
-    - name: Ensure Docker Container is Running
-      command: docker ps | grep amitg01/insure-me:latest
-      register: docker_ps
-      ignore_errors: yes  # Allow failure if the container is not found  
-
-    - name: Deploy App and Run as Container
-      command: /usr/bin/docker run -itd -p 8084:8081 amitg01/insure-me:latest
-      when: docker_ps.rc != 0
+  - name: Deploy Docker Container
+    command: docker run -itd -p 8084:8081 amitg01/insure-me:latest
