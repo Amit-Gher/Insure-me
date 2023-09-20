@@ -26,9 +26,14 @@ pipeline {
         }  
         stage('Docker Image Push') {
             steps {
-                sh 'docker login -u amitg01 -p ${DockerHubPwd}'
-                sh 'docker push amitg01/insure-me'
+                scripts{
+                    withCredentials([string(credentialsId: 'dockerhub-pwd', variable: 'dockerhubpwd')]) {
+                    sh 'docker login -u amitg01 -p ${dockerhubpwd}'
+                    }    
+                    sh 'docker push amitg01/insure-me'
             }    
         }     
     }
 }
+}
+    
