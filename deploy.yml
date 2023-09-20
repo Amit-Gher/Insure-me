@@ -15,5 +15,11 @@
     - name: Add user to Docker group
       shell: usermod -a -G docker ubuntu
 
+    - name: Ensure Docker Container is Running
+      command: docker ps | grep amitg01/insure-me:latest
+      register: docker_ps
+      ignore_errors: yes  # Allow failure if the container is not found  
+
     - name: Deploy App and Run as Container
       command: docker run -itd -p 8084:8081 amitg01/insure-me:latest
+      when: docker_ps.rc != 0
