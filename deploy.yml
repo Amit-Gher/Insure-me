@@ -15,9 +15,5 @@
     - name: Add user to Docker group
       shell: usermod -a -G docker ubuntu
 
-    - name: Check Docker Version
-      command: "docker version"
-      register: docversion
-
     - name: Deploy App and Run as Container
       command: docker run -itd -p 8084:8081 amitg01/insure-me:latest
