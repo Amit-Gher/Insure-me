@@ -1,18 +1,18 @@
 ---
--hosts: all
+- hosts: all
  become: true
  tasks:
-   -name: Install docker 
+   - name: Install docker 
     apt: name=docker.io state=present
-   -name: Start docker Service
+   - name: Start docker Service
     command: sudo systemctl start docker 
     become: true
     become_user: root
-   -name: docker run user
+   - name: docker run user
     shell: usermod -a -G docker ubuntu
-   -name: check the docker version 
+   - name: check the docker version 
     command: "docker version"
     register: docversion
-   -name: Deploy app and run as container
+   - name: Deploy app and run as container
     command: docker run -itd -p 8084:8081 amitg01/insure-me:latest
     
